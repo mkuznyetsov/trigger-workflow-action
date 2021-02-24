@@ -1,14 +1,16 @@
 {
-  "name": "setup-minikube-action",
+  "name": "trigger-workflow-action",
   "version": "0.0.1",
-  "author": "Florent Benoit",
-  "description": "Setup minikube to install/run Eclipse Che",
+  "author": "Mykhailo Kuznietsov",
+  "description": "Execute GitHub workflows",
   "license": "EPL-2.0",
   "private": true,
   "dependencies": {
     "@actions/artifact": "^0.5.0",
     "@actions/core": "^1.2.6",
     "@actions/tool-cache": "^1.6.1",
+    "@octokit/core": "^3.2.5",
+    "@octokit/rest": "^18.2.0",
     "execa": "^5.0.0",
     "fs-extra": "^9.1.0",
     "inversify": "^5.0.5",
@@ -58,10 +60,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
       }
     },
     "coverageDirectory": "./coverage",

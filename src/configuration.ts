@@ -9,6 +9,12 @@
  ***********************************************************************/
 export const Configuration = Symbol.for('Configuration');
 export interface Configuration {
-  jobNameSuffix(): string;
-  minikubeVersion(): string | undefined;
+  owner(): string;
+  repo(): string;
+  version(): string;
+  workflowId(): string | undefined;
+  workflowName(): string | undefined;
+  githubToken(): string;
+  waitInterval(): number;
+  waitTimeout(): number;
 }

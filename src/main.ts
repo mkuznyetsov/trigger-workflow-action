@@ -11,47 +11,62 @@ import * as core from '@actions/core';
 
 import { Configuration } from './configuration';
 import { InversifyBinding } from './inversify-binding';
-import { LaunchMinikube } from './launch-minikube';
-import { PostAction } from './post-action';
+import { WorkflowManager } from './workflow-manager';
 
 export class Main {
-  public static readonly MINIKUBE_VERSION: string = 'minikube-version';
-  public static readonly ACTION_STATE: string = 'minikube-state';
-  public static readonly ACTION_STATE_MAIN: string = 'MAIN';
-  public static readonly ACTION_STATE_POST: string = 'POST';
+  public static readonly OWNER: string = 'owner';
+  public static readonly REPO: string = 'repo';
+  public static readonly WORKFLOW_ID: string = 'workflow_id';
+  public static readonly WORKFLOW_NAME: string = 'workflow_name';
+  public static readonly WAIT_INTERVAL: string = 'wait_interval';
+  public static readonly WAIT_TIMEOUT: string = 'wait_timeout';
+  public static readonly GITHUB_TOKEN: string = 'github_token';
+  public static readonly VERSION: string = 'version';
 
   async initConfiguration(): Promise<Configuration> {
-    const minikubeVersion = core.getInput(Main.MINIKUBE_VERSION, { required: false });
+    const owner = core.getInput(Main.OWNER, { required: true });
+    if (!owner) {
+      throw new Error(`No repo provided (${Main.OWNER})`);
+    }
 
-    // custom job name ?
-    const jobNameSuffix = process.env['JOB_NAME_SUFFIX'] || '';
+    const repo = core.getInput(Main.REPO, { required: true });
+    if (!repo) {
+      throw new Error(`No repo provided (${Main.REPO})`);
+    }
+
+    const githubToken = core.getInput(Main.GITHUB_TOKEN, { required: true });
+    if (!githubToken) {
+      throw new Error(`No GitHub token provided (${Main.REPO})`);
+    }
+
+    const workflowId = core.getInput(Main.WORKFLOW_ID, { required: false });
+
+    const workflowFileName = core.getInput(Main.WORKFLOW_NAME, { required: false });
+
+    const version = core.getInput(Main.VERSION, { required: false });
+
+    const waitInterval = +core.getInput(Main.WAIT_INTERVAL, { required: false });
+
+    const waitTimeout = +core.getInput(Main.WAIT_TIMEOUT, { required: false });
     // configuration
     return {
-      jobNameSuffix: () => jobNameSuffix,
-      minikubeVersion: () => minikubeVersion,
+      owner: () => owner,
+      repo: () => repo,
+      workflowId: () => workflowId,
+      workflowName: () => workflowFileName,
+      version: () => version,
+      githubToken: () => githubToken,
+      waitInterval: () => waitInterval,
+      waitTimeout: () => waitTimeout,
     };
-  }
-
-  isPostAction(): boolean {
-    const previousState = core.getState(Main.ACTION_STATE);
-    if (previousState !== Main.ACTION_STATE_POST) {
-      core.saveState(Main.ACTION_STATE, Main.ACTION_STATE_POST);
-      return false;
-    }
-    return true;
   }
 
   protected async doStart(): Promise<void> {
     const configuration = await this.initConfiguration();
     const inversifyBinbding = new InversifyBinding(configuration);
     const container = await inversifyBinbding.initBindings();
-    if (this.isPostAction()) {
-      const postAction = container.get(PostAction);
-      await postAction.execute();
-    } else {
-      const launchMinikube = container.get(LaunchMinikube);
-      await launchMinikube.execute();
-    }
+    const manager = container.get(WorkflowManager);
+    await manager.execute();
   }
 
   async start(): Promise<boolean> {

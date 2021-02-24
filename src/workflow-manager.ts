@@ -11,18 +11,24 @@ import * as core from '@actions/core';
 
 import { inject, injectable } from 'inversify';
 
-import { CollectMinikubeEventsHelper } from './collect-minikube-events-helper';
+import { WorkflowChecker } from './workflow-checker';
+import { WorkflowRunner } from './workflow-runner';
 
 /**
- * Post Action
+ * Workflow manager
  */
 @injectable()
-export class PostAction {
-  @inject(CollectMinikubeEventsHelper)
-  private collectMinikubeEventsHelper: CollectMinikubeEventsHelper;
+export class WorkflowManager {
+  @inject(WorkflowRunner)
+  private wokrflowRunner: WorkflowRunner;
+
+  @inject(WorkflowChecker)
+  private workflowChecker: WorkflowChecker;
 
   public async execute(): Promise<void> {
-    core.info('Post action being executed...');
-    this.collectMinikubeEventsHelper.collect();
+    core.info('Running workflow...');
+    const workflowRunId = await this.wokrflowRunner.run();
+    core.info('Waiting for workflow [start]...');
+    await this.workflowChecker.check(workflowRunId);
   }
 }

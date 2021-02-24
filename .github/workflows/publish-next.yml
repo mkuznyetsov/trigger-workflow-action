@@ -35,5 +35,5 @@ jobs:
           git checkout --orphan next
           git add ./*
           git commit -m "Publish next version $(date +'%Y-%m-%d')" -s
-          git push -f "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/che-incubator/setup-minikube-action.git" next
+          git push -f "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/mkuznyetsov/trigger-workflow-action.git" next
  

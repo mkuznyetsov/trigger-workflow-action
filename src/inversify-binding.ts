@@ -9,13 +9,11 @@
  ***********************************************************************/
 import 'reflect-metadata';
 
-import { CollectMinikubeEventsHelper } from './collect-minikube-events-helper';
 import { Configuration } from './configuration';
 import { Container } from 'inversify';
-import { LaunchMinikube } from './launch-minikube';
-import { MinikubeSetupHelper } from './minikube-setup-helper';
-import { MinikubeStartHelper } from './minikube-start-helper';
-import { PostAction } from './post-action';
+import { WorkflowChecker } from './workflow-checker';
+import { WorkflowManager } from './workflow-manager';
+import { WorkflowRunner } from './workflow-runner';
 
 export class InversifyBinding {
   private container: Container;
@@ -25,13 +23,11 @@ export class InversifyBinding {
   public async initBindings(): Promise<Container> {
     this.container = new Container();
 
-    this.container.bind(MinikubeSetupHelper).toSelf().inSingletonScope();
-    this.container.bind(MinikubeStartHelper).toSelf().inSingletonScope();
-    this.container.bind(CollectMinikubeEventsHelper).toSelf().inSingletonScope();
+    this.container.bind(WorkflowChecker).toSelf().inSingletonScope();
+    this.container.bind(WorkflowManager).toSelf().inSingletonScope();
+    this.container.bind(WorkflowRunner).toSelf().inSingletonScope();
 
     this.container.bind(Configuration).toConstantValue(this.configuration);
-    this.container.bind(LaunchMinikube).toSelf().inSingletonScope();
-    this.container.bind(PostAction).toSelf().inSingletonScope();
 
     return this.container;
   }
