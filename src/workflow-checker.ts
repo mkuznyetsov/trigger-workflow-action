@@ -47,7 +47,7 @@ export class WorkflowChecker {
 
     while (!this.workflowIsFinished(status, conclusion) && currentTime < timeout) {
       await this.sleep(this.configuration.waitInterval() * 1000);
-      const response = await appOctokit.request('POST /repos/${repo}/actions/workflows/${workflow_run_id}/runs', {
+      const response = await appOctokit.request('POST /repos/{repo}/actions/workflows/{workflow_run_id}/runs', {
         owner: this.configuration.owner(),
         repo: this.configuration.repo(),
         workflow_run_id: workflowRunId,

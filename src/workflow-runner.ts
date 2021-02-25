@@ -23,7 +23,7 @@ export class WorkflowRunner {
       auth: this.configuration.githubToken(),
     });
 
-    await appOctokit.request('POST /repos/${owner}/${repo}/actions/workflows/${workflow_id}/dispatches', {
+    await appOctokit.request('POST /repos/${owner}/${repo}/actions/workflows/{workflow_id}/dispatches', {
       owner: this.configuration.owner(),
       repo: this.configuration.repo(),
       workflow_id: this.configuration.workflowId(),
@@ -33,7 +33,7 @@ export class WorkflowRunner {
     });
 
     const startedWorkflows = await appOctokit.request(
-      'GET https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_id}/runs',
+      'GET https://api.github.com/repos/{owner}/{repo}/actions/workflows/{workflow_id}/runs',
       {
         owner: this.configuration.owner(),
         repo: this.configuration.repo(),
