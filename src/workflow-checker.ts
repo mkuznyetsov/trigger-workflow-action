@@ -28,6 +28,12 @@ export class WorkflowChecker {
       return false;
     }
   }
+  
+  sleep(delay: number) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, delay);
+    });
+}
 
   async check(workflowRunId: string): Promise<void> {
     const appOctokit = new octokit.Octokit({
@@ -36,8 +42,10 @@ export class WorkflowChecker {
 
     let status = '';
     let conclusion = '';
-
+    const timeout = this.configuration.waitTimeout();
+    
     while (!this.workflowIsFinished(status, conclusion)) {
+      await this.sleep(this.configuration.waitInterval())
       const response = await appOctokit.request('POST /repos/${repo}/actions/workflows/${workflow_run_id}/runs', {
         owner: this.configuration.owner,
         repo: this.configuration.repo,

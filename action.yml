@@ -27,6 +27,6 @@ inputs:
   workflow_name: 
     description: "The name of workflow to trigger. If not set, then workflow ID must be provided" 
     required: false
-  parameters: 
-    description: "A JSON object that will be attached as list of inputs for workflow" 
+  version: 
+    description: "A version of project to release/" 
     required: false
