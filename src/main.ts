@@ -39,7 +39,7 @@ export class Main {
       throw new Error(`No GitHub token provided (${Main.REPO})`);
     }
 
-    const workflowId = core.getInput(Main.WORKFLOW_ID, { required: false });
+    const workflowId = +core.getInput(Main.WORKFLOW_ID, { required: true });
 
     const workflowFileName = core.getInput(Main.WORKFLOW_NAME, { required: false });
 

@@ -12,7 +12,7 @@ export interface Configuration {
   owner(): string;
   repo(): string;
   version(): string;
-  workflowId(): string | undefined;
+  workflowId(): number;
   workflowName(): string | undefined;
   githubToken(): string;
   waitInterval(): number;

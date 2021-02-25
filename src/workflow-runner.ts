@@ -23,10 +23,11 @@ export class WorkflowRunner {
       auth: this.configuration.githubToken(),
     });
 
-    await appOctokit.request('POST /repos/${owner}/${repo}/actions/workflows/{workflow_id}/dispatches', {
+    await appOctokit.request('POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches', {
       owner: this.configuration.owner(),
       repo: this.configuration.repo(),
       workflow_id: this.configuration.workflowId(),
+      ref: 'master',
       inputs: {
         version: this.configuration.version(),
       },
