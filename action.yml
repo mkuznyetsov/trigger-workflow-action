@@ -28,5 +28,9 @@ inputs:
     description: "The name of workflow to trigger. If not set, then workflow ID must be provided" 
     required: false
   version: 
-    description: "A version of project to release/" 
+    description: "A version of project to release" 
     required: false
+  github_token: 
+    description: "A GitHub token" 
+    required: false
+
