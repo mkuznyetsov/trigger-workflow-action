@@ -1,0 +1,36 @@
+name: 'Trigger Workflow'
+description: This action is used to trigger workflows by given ID. It also waits for its successful completion.
+author: Mykhailo Kuznietsov mkuznets@redhat.com
+runs:
+  using: 'node12'
+  main: 'lib/index.js'
+  post: 'lib/index.js'
+inputs:
+  owner:
+    description: "The owner of the repository where the workflow is located."
+    required: true
+  repo:
+    description: "The name of the repository where the workflow is located."
+    required: true
+  wait_workflow:
+    description:  "If true, the action will wait until the workflow is finished."
+    required: true
+  wait_interval: 
+    description: "A period of time in seconds, used to specify interval at which workflow run status is queried"
+    required: true
+  wait_timeout: 
+    description: "A period of time in seconds, used to specify interval at which workflow run status is queried"
+    required: true
+  workflow_id: 
+    description: "The ID of workflow to trigger. If not set, then workflow name must be provided"
+    required: false
+  workflow_name: 
+    description: "The name of workflow to trigger. If not set, then workflow ID must be provided" 
+    required: false
+  version: 
+    description: "A version of project to release" 
+    required: false
+  github_token: 
+    description: "A GitHub token" 
+    required: false
+
