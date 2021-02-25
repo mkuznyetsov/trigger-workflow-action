@@ -20,24 +20,24 @@ export class WorkflowRunner {
 
   async run(): Promise<string> {
     const appOctokit = new octokit.Octokit({
-      auth: this.configuration.githubToken,
+      auth: this.configuration.githubToken(),
     });
 
     await appOctokit.request('POST /repos/${owner}/${repo}/actions/workflows/${workflow_id}/dispatches', {
-      owner: this.configuration.owner,
-      repo: this.configuration.repo,
-      workflow_id: this.configuration.workflowId,
+      owner: this.configuration.owner(),
+      repo: this.configuration.repo(),
+      workflow_id: this.configuration.workflowId(),
       inputs: {
-        version: this.configuration.version,
+        version: this.configuration.version(),
       },
     });
 
     const startedWorkflows = await appOctokit.request(
       'GET https://api.github.com/repos/${owner}/${repo}/actions/workflows/${workflow_id}/runs',
       {
-        owner: this.configuration.owner,
-        repo: this.configuration.repo,
-        workflow_id: this.configuration.workflowId,
+        owner: this.configuration.owner(),
+        repo: this.configuration.repo(),
+        workflow_id: this.configuration.workflowId(),
       }
     );
     return Promise.resolve(startedWorkflows.data.workflow_runs[0].workflow_id);

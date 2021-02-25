@@ -37,7 +37,7 @@ export class WorkflowChecker {
 
   async check(workflowRunId: string): Promise<void> {
     const appOctokit = new octokit.Octokit({
-      auth: this.configuration.githubToken,
+      auth: this.configuration.githubToken(),
     });
 
     let status = '';
@@ -48,8 +48,8 @@ export class WorkflowChecker {
     while (!this.workflowIsFinished(status, conclusion) && currentTime < timeout) {
       await this.sleep(this.configuration.waitInterval() * 1000);
       const response = await appOctokit.request('POST /repos/${repo}/actions/workflows/${workflow_run_id}/runs', {
-        owner: this.configuration.owner,
-        repo: this.configuration.repo,
+        owner: this.configuration.owner(),
+        repo: this.configuration.repo(),
         workflow_run_id: workflowRunId,
       });
       [status, conclusion] = response.data;
